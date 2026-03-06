@@ -1,5 +1,5 @@
 import React, { useState } from 'react';    
-import authToken from './authToken'
+import AuthToken from './AuthToken'
 
 const Login = ({ setToken }) => {
     const [user, setUser] = useState('');
