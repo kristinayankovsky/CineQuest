@@ -26,7 +26,7 @@ function App() {
   }
 
   return (
-    <section id="root">
+    <section className="auth">
       <h1>CineQuest!</h1>
       <Login setToken={setToken} />
       <SignUp setToken={setToken} />
