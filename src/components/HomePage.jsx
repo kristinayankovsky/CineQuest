@@ -16,7 +16,7 @@ function HomePage() {
   const fetchPopularMovies = async () => {
     try {
       const response = await fetch(
-        `https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEYAPI_KEY}`
+        `https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEY}`
       );
 
       const data = await response.json();
@@ -37,7 +37,7 @@ function HomePage() {
 
     try {
       const response = await fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEYAPI_KEY}&query=${query}`
+        `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${query}`
       );
 
       const data = await response.json();

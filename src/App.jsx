@@ -4,13 +4,13 @@ import SignUp from "./components/SignUp";
 import HomePage from "./components/HomePage";
 import Profile from "./components/Profile";
 import WatchList from "./components/WatchList";
-import MovieDetails from "./components/MovieDetails";
+import MovieDetails from "./components/MovieDetails.jsx";
 import AuthToken from "./components/AuthToken";
 
 function App() {
   const { token, setToken, logout } = AuthToken();
 
-  if (token) {
+  if (true) {
     return (
       <>
         <button onClick={logout} style={{ float: "right" }}>Logout</button>
