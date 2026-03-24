@@ -1,16 +1,94 @@
-# React + Vite
+Project Overview:
+CineQuest is a full-stack web application that allows users to browse movies, manage accounts, and interact with movie-related content. The project uses a React frontend and a Node.js backend to deliver a dynamic user experience.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Project Setup instructions:
+1.
+git clone https://github.com/kristinayankovsky/CineQuest
+cd CineQuest
 
-Currently, two official plugins are available:
+Install dependencies:
+2.
+npm install
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Run the application:
+3.
+npm run dev
 
-## React Compiler
+Features: 
+-User authentication (login/register)
+-Browse and search movies
+-Save favorite movies
+-API integration for movie data
+-Responsive UI with React
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Technologies Used:
+Frontend:
+-React
+-Vite
+-JavaScript (ES6+)
+-CSS
 
-## Expanding the ESLint configuration
+Backend:
+-Node.js
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Other:
+-Git & Github
+-npm
+-APIS
+
+APIS used:
+-The Movie Database (TMDB) API
+-https://www.postman.com/api-evangelist/rotten-tomatoes/folder/iinnb20/lists?sideView=agentMode
+
+Auth Routes:
+POST /login
+
+-Logs in a user
+
+Request Body:
+
+{
+  "username": "user",
+  "password": "password"
+}
+
+Response:
+
+{
+  "token": "jwt_token"
+}
+
+POST /register
+
+-registers a new user
+
+Movie Routes:
+GET /movies
+
+-Fetch all movies
+
+GET /movies/
+
+-Fetch a specific movie by ID
+
+Known Limitations / Bugs:
+-Some components may not fully handle edge cases (e.g., empty API responses)
+-Authentication may not persist after refresh (if token handling is incomplete)
+-UI styling may not be fully responsive on all screen sizes
+-Error handling for API failures can be improved
+
+Code Notes/ Complex Logic:
+-Custom hooks (e.g., useAuthToken) manage authentication state using localStorage
+-API calls are handled using async/await for cleaner asynchronous code
+-Backend uses middleware for authentication and request validation
+
+Code Formatting:
+-Consistent use of ES6 syntax
+-Functional React components with hooks
+-Clear and readable variable/function naming
+-Organized folder structure (client/server separation)
+
+Contributors:
+-Kristina Yankovsky
+-Nataly Glushak
+Salem Hernandez
