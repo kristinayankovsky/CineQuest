@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getMovieByTitle } from "../api/omdb";
 
 const TMDB_API_KEY = "2fd3461afc2c02e3156745cbec4a1376";
 
@@ -20,7 +21,20 @@ function HomePage() {
       );
 
       const data = await response.json();
-      setMovies(data.results);
+
+      // 🔥 ADD OMDb HERE
+      const moviesWithRatings = await Promise.all(
+        data.results.slice(0, 5).map(async (movie) => {
+          const omdbData = await getMovieByTitle(movie.title);
+
+          return {
+            ...movie,
+            omdb: omdbData,
+          };
+        })
+      );
+
+      setMovies(moviesWithRatings);
 
     } catch (error) {
       console.error("Error fetching movies:", error);
@@ -41,7 +55,20 @@ function HomePage() {
       );
 
       const data = await response.json();
-      setMovies(data.results);
+
+      // 🔥 ADD OMDb HERE TOO
+      const moviesWithRatings = await Promise.all(
+        data.results.slice(0, 5).map(async (movie) => {
+          const omdbData = await getMovieByTitle(movie.title);
+
+          return {
+            ...movie,
+            omdb: omdbData,
+          };
+        })
+      );
+
+      setMovies(moviesWithRatings);
 
     } catch (error) {
       console.error("Search error:", error);
@@ -79,41 +106,51 @@ function HomePage() {
           gap: "20px"
         }}
       >
-        {movies.map((movie) => (
+        {movies.map((movie) => {
 
-          <Link
-            key={movie.id}
-            to={`/movie/${movie.id}`}
-            style={{ textDecoration: "none", color: "black" }}
-          >
+          const rotten = movie.omdb?.Ratings?.find(
+            (r) => r.Source === "Rotten Tomatoes"
+          );
 
-            <div>
+          return (
+            <Link
+              key={movie.id}
+              to={`/movie/${movie.id}`}
+              style={{ textDecoration: "none", color: "black" }}
+            >
 
-              {movie.poster_path ? (
-                <img
-                  src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-                  alt={movie.title}
-                  style={{ width: "200px", borderRadius: "8px" }}
-                />
-              ) : (
-                <div
-                  style={{
-                    width: "200px",
-                    height: "300px",
-                    background: "#ccc"
-                  }}
-                />
-              )}
+              <div>
 
-              <h3>{movie.title}</h3>
+                {movie.poster_path ? (
+                  <img
+                    src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                    alt={movie.title}
+                    style={{ width: "200px", borderRadius: "8px" }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: "200px",
+                      height: "300px",
+                      background: "#ccc"
+                    }}
+                  />
+                )}
 
-              <p>⭐ {movie.vote_average}</p>
+                <h3>{movie.title}</h3>
 
-            </div>
+                <p>⭐ {movie.vote_average}</p>
 
-          </Link>
+                {/* 🍅 NEW (Rotten Tomatoes) */}
+                <p>
+                  🍅 {rotten ? rotten.Value : "N/A"}
+                </p>
 
-        ))}
+              </div>
+
+            </Link>
+          );
+        })}
       </div>
 
     </div>

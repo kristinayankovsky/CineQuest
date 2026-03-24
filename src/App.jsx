@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import useAuthToken from './components/useAuthToken';
-import Home from './components/Home';
+import Home from './components/HomePage';
 import MovieDetails from './components/MovieDetails';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
