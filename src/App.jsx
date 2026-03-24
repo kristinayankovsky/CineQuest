@@ -8,15 +8,19 @@ import MovieDetails from "./components/MovieDetails.jsx";
 import useAuthToken from "./components/useAuthToken";
 
 function App() {
-  const { token, setToken, logout } = useAuthToken();
+  const { user, logout, loading } = useAuthToken();
 
-  // if we don’t have a token stored, show the login/signup form
-  if (!token) {
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  // if we don’t have a user, show the login/signup form
+  if (!user) {
     return (
       <section className="auth">
         <h1>CineQuest!</h1>
-        <Login setToken={setToken} />
-        <SignUp setToken={setToken} />
+        <Login />
+        <SignUp />
       </section>
     );
   }
