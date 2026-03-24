@@ -1,7 +1,10 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import MovieDetails from './pages/MovieDetails';
+import useAuthToken from './components/useAuthToken';
+import Home from './components/Home';
+import MovieDetails from './components/MovieDetails';
+import Login from './components/Login';
+import SignUp from './components/SignUp';
 
 function App() {
   const { user, logout, loading } = useAuthToken();
@@ -23,10 +26,15 @@ function App() {
 
   // otherwise render the normal application and expose a logout button
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/movie/:id" element={<MovieDetails />} />
-    </Routes>
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '20px' }}>
+        <button onClick={logout}>Logout</button>
+      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/movie/:id" element={<MovieDetails />} />
+      </Routes>
+    </div>
   );
 }
 

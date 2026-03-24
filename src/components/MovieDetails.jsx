@@ -1,78 +1,54 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React from 'react';
+import { useParams } from 'react-router-dom';
 
-const TMDB_API_KEY = "2fd3461afc2c02e3156745cbec4a1376";
-
-
-const MovieDetails = () => {
+function MovieDetails() {
   const { id } = useParams();
 
-  const [movie, setMovie] = useState(null);
-  const [cast, setCast] = useState([]);
-  const [reviews, setReviews] = useState([]);
-
-  useEffect(() => {
-    fetchMovie();
-    fetchCast();
-  }, [id]);
-
-  const fetchMovie = async () => {
-    const res = await fetch(
-      `https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}`
-    );
-    const data = await res.json();
-    setMovie(data);
-
-    // fetch reviews once we know the movie title
-    fetchReviews(data.title);
+  // Temporary mock data
+  const movie = {
+    title: "Urban Eclipse",
+    rating: 8.7,
+    year: 2024,
+    synopsis:
+      "In a future where rogue AI controls urban spires, a lone operative must infiltrate the fortified city of Neo-Kyoto to retrieve a master code and prevent global shutdown.",
+    poster:
+      "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&w=500&q=80"
   };
-
-  const fetchCast = async () => {
-    const res = await fetch(
-      `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${TMDB_API_KEY}`
-    );
-    const data = await res.json();
-    setCast(data.cast.slice(0, 5));
-  };
-
-  
-
-  if (!movie) return <p>Loading...</p>;
 
   return (
-    <div>
+    <div className="app-container">
+      <div className="details-layout">
+        <img
+          src={movie.poster}
+          alt={movie.title}
+          className="details-poster"
+        />
 
-      <h1>{movie.title}</h1>
+        <div>
+          <h1 className="details-title">{movie.title}</h1>
 
-      <p>{movie.overview}</p>
+          <div className="details-meta">
+            <span>{movie.year}</span>
+            <span className="details-rating">⭐ {movie.rating}</span>
+          </div>
 
-      <h3>Rating: {movie.vote_average}</h3>
+          <p className="details-synopsis">{movie.synopsis}</p>
 
-      <h2>Cast</h2>
-      <ul>
-        {cast.map(actor => (
-          <li key={actor.id}>
-            {actor.name} as {actor.character}
-          </li>
-        ))}
-      </ul>
+          <button className="btn btn-primary">+ Add to Watchlist</button>
 
-      <h2>Critic Reviews</h2>
-
-      {reviews.length === 0 && <p>No reviews found.</p>}
-
-      {reviews.map((review, index) => (
-        <div key={index}>
-          <p><strong>{review.display_title}</strong></p>
-          <p>{review.summary_short}</p>
-          <a href={review.link.url} target="_blank" rel="noopener noreferrer">
-            Read Full Review
-          </a>
+          <div className="critics-corner">
+            <h3>Critic's Corner</h3>
+            <div className="review-item">
+              "A cyber-noir masterpiece." – FilmBuff
+            </div>
+            <div className="review-item">
+              "Pulse-pounding action and stunning visuals." – The Daily Reel
+            </div>
+          </div>
         </div>
-      ))}
-
+      </div>
     </div>
   );
-};
+}
 
 export default MovieDetails;
