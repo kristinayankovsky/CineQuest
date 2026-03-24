@@ -4,7 +4,6 @@ import Home from './pages/Home';
 import MovieDetails from './pages/MovieDetails';
 
 function App() {
-<<<<<<< HEAD
   const { user, logout, loading } = useAuthToken();
 
   if (loading) {
@@ -23,8 +22,6 @@ function App() {
   }
 
   // otherwise render the normal application and expose a logout button
-=======
->>>>>>> ba3d6cbb662e784921aab23a8ffbdde14452df40
   return (
     <Routes>
       <Route path="/" element={<Home />} />
