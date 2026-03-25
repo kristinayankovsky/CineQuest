@@ -15,6 +15,16 @@ function MovieDetails() {
       "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&w=500&q=80"
   };
 
+  const handleAddToWatchlist = () => {
+  const existing = JSON.parse(localStorage.getItem("watchlist")) || [];
+
+  const updated = [...existing, movie];
+
+  localStorage.setItem("watchlist", JSON.stringify(updated));
+
+  console.log("Added to watchlist:", updated);
+};
+
   return (
     <div className="app-container">
       <div className="details-layout">
@@ -34,7 +44,12 @@ function MovieDetails() {
 
           <p className="details-synopsis">{movie.synopsis}</p>
 
-          <button className="btn btn-primary">+ Add to Watchlist</button>
+          <button
+            className="btn btn-primary"
+            onClick={handleAddToWatchlist}
+            >
+              + Add to Watchlist
+            </button>
 
           <div className="critics-corner">
             <h3>Critic's Corner</h3>
