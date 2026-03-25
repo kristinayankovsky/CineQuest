@@ -25,7 +25,7 @@ const useAuthToken = () => {
 
     return {
         user,
-        token: user ? user.uid : null, // or use getIdToken for JWT
+        token: user ? user.uid : null, 
         logout,
         loading
     };
