@@ -50,11 +50,25 @@ function HomePage() {
             }
           }
 
+          // ✅ NEW: Get OMDB ratings using imdbID
+          let omdbData = null;
+          if (imdbID) {
+            try {
+              const omdbRes = await fetch(
+                `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&i=${imdbID}`
+              );
+              omdbData = await omdbRes.json();
+            } catch (err) {
+              console.error("OMDB rating error:", err);
+            }
+          }
+
           console.log("FINAL imdbID:", imdbID);
 
           return {
             ...movie,
             imdbID,
+            omdb: omdbData, // 👈 added safely
           };
         })
       );
@@ -109,11 +123,25 @@ function HomePage() {
             }
           }
 
+          // ✅ NEW: Get OMDB ratings
+          let omdbData = null;
+          if (imdbID) {
+            try {
+              const omdbRes = await fetch(
+                `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&i=${imdbID}`
+              );
+              omdbData = await omdbRes.json();
+            } catch (err) {
+              console.error("OMDB rating error:", err);
+            }
+          }
+
           console.log("FINAL imdbID:", imdbID);
 
           return {
             ...movie,
             imdbID,
+            omdb: omdbData, // 👈 added safely
           };
         })
       );
@@ -156,7 +184,11 @@ function HomePage() {
       >
         {movies.map((movie) => {
 
-          if (!movie.imdbID) return null; // 👈 prevents broken clicks
+          if (!movie.imdbID) return null;
+
+          const rotten = movie.omdb?.Ratings?.find(
+            (r) => r.Source === "Rotten Tomatoes"
+          );
 
           return (
             <Link
@@ -184,6 +216,9 @@ function HomePage() {
 
                 <h3>{movie.title}</h3>
                 <p>⭐ {movie.vote_average}</p>
+
+                {/* 🍅 Rotten Tomatoes */}
+                <p>🍅 {rotten ? rotten.Value : "N/A"}</p>
 
               </div>
             </Link>
