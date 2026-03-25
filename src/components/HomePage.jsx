@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getMovieByTitle } from "../api/omdb";
 
 const TMDB_API_KEY = "2fd3461afc2c02e3156745cbec4a1376";
+const OMDB_API_KEY = "88180830";
 
 function HomePage() {
 
   const [movies, setMovies] = useState([]);
   const [query, setQuery] = useState("");
 
-  // Fetch popular movies when page loads
   useEffect(() => {
     fetchPopularMovies();
   }, []);
@@ -22,26 +21,51 @@ function HomePage() {
 
       const data = await response.json();
 
-      //  ADD OMDb HERE
-      const moviesWithRatings = await Promise.all(
+      const moviesWithIDs = await Promise.all(
         data.results.slice(0, 5).map(async (movie) => {
-          const omdbData = await getMovieByTitle(movie.title);
+
+          let imdbID = null;
+
+          // 🔹 Try TMDB first
+          try {
+            const externalRes = await fetch(
+              `https://api.themoviedb.org/3/movie/${movie.id}/external_ids?api_key=${TMDB_API_KEY}`
+            );
+            const externalData = await externalRes.json();
+            imdbID = externalData.imdb_id;
+          } catch (err) {
+            console.error("TMDB external ID error:", err);
+          }
+
+          // 🔹 Fallback to OMDB if missing
+          if (!imdbID) {
+            try {
+              const omdbRes = await fetch(
+                `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&t=${encodeURIComponent(movie.title)}`
+              );
+              const omdbData = await omdbRes.json();
+              imdbID = omdbData.imdbID;
+            } catch (err) {
+              console.error("OMDB fallback error:", err);
+            }
+          }
+
+          console.log("FINAL imdbID:", imdbID);
 
           return {
             ...movie,
-            omdb: omdbData,
+            imdbID,
           };
         })
       );
 
-      setMovies(moviesWithRatings);
+      setMovies(moviesWithIDs);
 
     } catch (error) {
       console.error("Error fetching movies:", error);
     }
   };
 
-  // Search movies
   const searchMovies = async () => {
 
     if (query.trim() === "") {
@@ -56,19 +80,45 @@ function HomePage() {
 
       const data = await response.json();
 
-      //  ADD OMDb HERE TOO
-      const moviesWithRatings = await Promise.all(
+      const moviesWithIDs = await Promise.all(
         data.results.slice(0, 5).map(async (movie) => {
-          const omdbData = await getMovieByTitle(movie.title);
+
+          let imdbID = null;
+
+          // 🔹 Try TMDB first
+          try {
+            const externalRes = await fetch(
+              `https://api.themoviedb.org/3/movie/${movie.id}/external_ids?api_key=${TMDB_API_KEY}`
+            );
+            const externalData = await externalRes.json();
+            imdbID = externalData.imdb_id;
+          } catch (err) {
+            console.error("TMDB external ID error:", err);
+          }
+
+          // 🔹 Fallback to OMDB
+          if (!imdbID) {
+            try {
+              const omdbRes = await fetch(
+                `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&t=${encodeURIComponent(movie.title)}`
+              );
+              const omdbData = await omdbRes.json();
+              imdbID = omdbData.imdbID;
+            } catch (err) {
+              console.error("OMDB fallback error:", err);
+            }
+          }
+
+          console.log("FINAL imdbID:", imdbID);
 
           return {
             ...movie,
-            omdb: omdbData,
+            imdbID,
           };
         })
       );
 
-      setMovies(moviesWithRatings);
+      setMovies(moviesWithIDs);
 
     } catch (error) {
       console.error("Search error:", error);
@@ -80,7 +130,6 @@ function HomePage() {
 
       <h1>CineQuest</h1>
 
-      {/* Search Bar */}
       <div style={{ marginBottom: "20px" }}>
         <input
           type="text"
@@ -98,7 +147,6 @@ function HomePage() {
         </button>
       </div>
 
-      {/* Movies Grid */}
       <div
         style={{
           display: "grid",
@@ -108,17 +156,14 @@ function HomePage() {
       >
         {movies.map((movie) => {
 
-          const rotten = movie.omdb?.Ratings?.find(
-            (r) => r.Source === "Rotten Tomatoes"
-          );
+          if (!movie.imdbID) return null; // 👈 prevents broken clicks
 
           return (
             <Link
               key={movie.id}
-              to={`/movie/${movie.id}`}
+              to={`/movie/${movie.imdbID}`}
               style={{ textDecoration: "none", color: "black" }}
             >
-
               <div>
 
                 {movie.poster_path ? (
@@ -138,16 +183,9 @@ function HomePage() {
                 )}
 
                 <h3>{movie.title}</h3>
-
                 <p>⭐ {movie.vote_average}</p>
 
-                {/* 🍅 NEW (Rotten Tomatoes) */}
-                <p>
-                  🍅 {rotten ? rotten.Value : "N/A"}
-                </p>
-
               </div>
-
             </Link>
           );
         })}

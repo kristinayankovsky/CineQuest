@@ -1,55 +1,82 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { getMovieById } from '../api/omdb'; 
+
+
 
 function MovieDetails() {
   const { id } = useParams();
 
-  // Temporary mock data
-  const movie = {
-    title: "Urban Eclipse",
-    rating: 8.7,
-    year: 2024,
-    synopsis:
-      "In a future where rogue AI controls urban spires, a lone operative must infiltrate the fortified city of Neo-Kyoto to retrieve a master code and prevent global shutdown.",
-    poster:
-      "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&w=500&q=80"
-  };
+
+
+  const [movie, setMovie] = useState(null);
+
+  useEffect(() => {
+    const fetchMovie = async () => {
+      const data = await getMovieById(id);
+  
+      setMovie(data);
+    };
+
+    fetchMovie();
+  }, [id]);
 
   const handleAddToWatchlist = () => {
-  const existing = JSON.parse(localStorage.getItem("watchlist")) || [];
+    const existing = JSON.parse(localStorage.getItem("watchlist")) || [];
 
-  const updated = [...existing, movie];
+    const newMovie = {
+      title: movie.Title,
+      year: movie.Year,
+      rating: movie.imdbRating,
+      synopsis: movie.Plot,
+      poster: movie.Poster,
+    };
 
-  localStorage.setItem("watchlist", JSON.stringify(updated));
+    const alreadyExists = existing.some(
+      (m) => m.title === newMovie.title
+    );
 
-  console.log("Added to watchlist:", updated);
-};
+    if (alreadyExists) {
+      alert("Already added!");
+      return;
+    }
+
+    const updated = [...existing, newMovie];
+    localStorage.setItem("watchlist", JSON.stringify(updated));
+
+    console.log("Added to watchlist:", updated);
+  };
+
+  //  loading state 
+  if (!movie) {
+    return <div className="app-container">Loading...</div>;
+  }
 
   return (
     <div className="app-container">
       <div className="details-layout">
         <img
-          src={movie.poster}
-          alt={movie.title}
+          src={movie.Poster}
+          alt={movie.Title}
           className="details-poster"
         />
 
         <div>
-          <h1 className="details-title">{movie.title}</h1>
+          <h1 className="details-title">{movie.Title}</h1>
 
           <div className="details-meta">
-            <span>{movie.year}</span>
-            <span className="details-rating">⭐ {movie.rating}</span>
+            <span>{movie.Year}</span>
+            <span className="details-rating">⭐ {movie.imdbRating}</span>
           </div>
 
-          <p className="details-synopsis">{movie.synopsis}</p>
+          <p className="details-synopsis">{movie.Plot}</p>
 
           <button
             className="btn btn-primary"
             onClick={handleAddToWatchlist}
-            >
-              + Add to Watchlist
-            </button>
+          >
+            + Add to Watchlist
+          </button>
 
           <div className="critics-corner">
             <h3>Critic's Corner</h3>
