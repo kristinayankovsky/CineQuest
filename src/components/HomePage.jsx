@@ -22,7 +22,7 @@ function HomePage() {
 
       const data = await response.json();
 
-      // 🔥 ADD OMDb HERE
+      //  ADD OMDb HERE
       const moviesWithRatings = await Promise.all(
         data.results.slice(0, 5).map(async (movie) => {
           const omdbData = await getMovieByTitle(movie.title);
@@ -56,7 +56,7 @@ function HomePage() {
 
       const data = await response.json();
 
-      // 🔥 ADD OMDb HERE TOO
+      //  ADD OMDb HERE TOO
       const moviesWithRatings = await Promise.all(
         data.results.slice(0, 5).map(async (movie) => {
           const omdbData = await getMovieByTitle(movie.title);
