@@ -5,6 +5,7 @@ import Home from './components/HomePage';
 import MovieDetails from './components/MovieDetails';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
+import WatchList from './components/WatchList';
 
 function App() {
   const { user, logout, loading } = useAuthToken();
